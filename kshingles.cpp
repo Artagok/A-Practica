@@ -163,17 +163,23 @@ void compare_2_docs() {
     fill_map(pathA, contentsA);
     fill_map(pathB, contentsB);
 
-    
-    for (set<string>::iterator it = m[pathA].begin(); it != m[pathA].end(); ++it) {
-        cout << *it << "|";
-    }
-    cout << endl << endl << endl;
+    cout << "Do you want to print all " << k <<"-shingles from documents A & B? [Y/N] ";
+    string resposta;
+    cin >> resposta;
+    cout << endl;  
+
+    if (resposta == "Y" or resposta == "y") {
+        for (set<string>::iterator it = m[pathA].begin(); it != m[pathA].end(); ++it) {
+            cout << *it << "|";
+        }
+        cout << endl << endl << endl;
 
 
-    for (set<string>::iterator it = m[pathB].begin(); it != m[pathB].end(); ++it) {
-        cout << *it << "|";
+        for (set<string>::iterator it = m[pathB].begin(); it != m[pathB].end(); ++it) {
+            cout << *it << "|";
+        }
+        cout << endl;
     }
-    cout << endl;
 
     obtain_Jsim_AB(pathA,pathB);
 }
