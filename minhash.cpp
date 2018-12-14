@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 #include <set>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 #include <algorithm>
 #include <vector>
 
@@ -127,6 +129,80 @@ void fill_index(set<string> s1_set, set<string> s2_set, set<string> s3_set, vect
     }
 }
 
+double compute_min_hash(int tam, int num_hashs, int num_docu, vector<int> s1, vector<int> s2){
+
+
+    	srand (time(NULL));
+    	vector<pair<int,int> > h;
+    	int m,n;
+    	for (int i = 0; i < num_hashs; i++){
+    		//eq de la forma m*x + n = y
+    		m = rand() % tam;
+    		n = rand() % tam;
+    		h.push_back(make_pair(m,n));
+    	}
+
+    	//cout << "contingut d'H:" << endl << endl;
+
+    	/*for (int i = 0; i < h.size(); i++){
+    		cout << h[i].first << " " << h[i].second << endl;
+    	}
+    	cout << endl;
+        */
+    ///////////////////////////////
+    /////COMPUTAR MINHASHES ///////
+    ///////////////////////////////
+
+    	vector <vector<int> > t (num_hashs, vector<int>(num_docu,-1));
+    	for (int i = 0; i < tam; i++) //per cada shingle
+    	{
+    		for (int j = 0; j < num_docu; j++) //documents
+    		{
+    			for (int k = 0; k < num_hashs ; k++) //hash function
+    			{
+    				vector<int>::iterator it;
+    				if (j == 0){
+    					it = find (s1.begin(), s1.end(), i);
+    				}
+    				else { //j == 1
+    					it = find (s2.begin(), s2.end(), i);
+    				}
+     	 			if ((j==0 and it != s1.end()) or (j==1 and it != s2.end())){
+
+     	 				int res = (h[k].first * i + h[k].second) % tam;
+
+    					if (t[k][j] == -1){
+    						t[k][j] = res;
+    					}
+    					else if(res < t[k][j]){
+    						t[k][j] = res;
+    					}
+    				}
+    			}
+    		}
+    	}
+        /*
+    	cout << "contingut de T:" << endl << endl;
+
+    	for (int i = 0; i < num_hashs; i++){
+    		for (int j = 0; j < num_docu; j++){
+    			cout << t[i][j] << " ";
+    		}
+    		cout << endl;
+    	}
+    	cout << endl;
+        */
+    ////////////////////////////////////////////////////
+    /////VEURE SIMILITUDS ENTRE ELS DOS MINHASHES///////
+    ////////////////////////////////////////////////////
+
+    	int eq = 0;
+    	for (int i = 0; i < num_hashs; i++){
+    		if (t[i][0] == t[i][1]) eq++;
+    	}
+        return (double) eq/ (double) num_hashs;
+
+}
 
 
 // Case 1 in Switch
@@ -189,27 +265,33 @@ void compare_2_docs() {
     set<string> s3_set;
 
     union_sets(m[pathA], m[pathB], s3_set);
-
+/*
     cout << "Resultat d'unir els dos sets" << endl << endl;
     for (set<string>::iterator it = s3_set.begin(); it != s3_set.end(); ++it) {
         cout << *it << "|";
     }
-
+*/
     vector<int> s1;
     vector<int> s2;
 
     fill_index(m[pathA], m[pathB], s3_set, s1,s2);
 
 
-
+/*
     cout << "Aquests son els index de s1 i s2" << endl;
 
     for(int i = 0; i < s1.size(); i++) cout << s1[i] << " ";
     cout << endl;
     for(int i = 0; i < s2.size(); i++) cout << s2[i] << " ";
+*/
 
+    cout << "Determina quantes funcions de hash vols fer servir: " << endl;
 
-    //obtain_Jsim_AB(pathA,pathB);
+    int num_hashs;
+    cin >> num_hashs;
+    int num_docu = 2;
+    double jacard_sim = compute_min_hash(s3_set.size(), num_hashs, num_docu, s1, s2);
+    cout << "Jaccard similarity by minhashing is: " << jacard_sim << endl;
 }
 
 
