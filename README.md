@@ -1,4 +1,5 @@
 # A-Practica
-## Victor Vallejo
-## Aleix Dalmau
-## Pau Nunez
+### 2018-2019 QT
+**Victor Vallejo** 
+**Aleix Dalmau** 
+**Pau Nunez** 
