@@ -318,6 +318,80 @@ void compute_band_lsh(int ith_band, int tam, const vector<vector<int> >& S, int 
 	}
 }
 
+
+
+double obtain_Jsim_AB(set<string> s1_set, set<string> s2_set) {
+
+    int intersection = 0;
+
+    for (set<string>::iterator itA = s1_set.begin(); itA != s1_set.end(); ++itA) {
+        // Meaning we either have found the word of A in B (MATCH) or we can stop searching in B because we reached
+        // wordA < wordB and due to the fact that set<string> are ordered alphabetically (char by char by its ASCII code)
+        // we've guaranteed that wordA will not be in B from this point onwards.
+        bool match_or_gt = false;
+        for (set<string>::iterator itB = s2_set.begin(); itB != s2_set.end() and (not match_or_gt); ++itB) {
+
+            // Shingle MATCH --> Shingle in A∩B
+            if (*itA == *itB) {
+                intersection++;
+                match_or_gt = true;
+            }
+            // WordA < WordB --> WordA is NOT in B
+            else if (*itA < *itB) {
+                match_or_gt = true;
+            }
+        }
+    }
+
+    int reunion =   (s1_set.size() - intersection) +
+                    (s2_set.size() - intersection) +
+                    intersection;
+
+
+    return (double) intersection / (double) reunion;
+
+}
+
+set<string> obtenir_set(int n){
+    map<string,set<string> >:: iterator it = m.begin();
+    for(int i = 0; i < n; ++i){
+        ++it;
+    }
+    return it -> second;
+}
+
+void minim_jacard(vector<vector<int> > buckets) {
+    double max_jac, jac_s1_s2;
+    max_jac = 0;
+    pair<int,int> mes_similars;
+
+    for(int k = 0; k < buckets.size(); ++k){
+
+        if(buckets[k].size() != 0){
+            cout << "Aquests son els Jacards de cada parell de fitxers del bucket: " << k <<  endl;
+            for(int i = 0; i < buckets[k].size()-1;++i) {
+                for(int j = i+1; j < buckets[k].size(); ++j){
+                    set<string> s1 = obtenir_set(buckets[k][i]);
+                    set<string> s2 = obtenir_set(buckets[k][j]);
+                    jac_s1_s2 = obtain_Jsim_AB(s1,s2);
+
+                    cout << "El jacard entre els fitxers identificats per " << buckets[k][i] << " i " << buckets[k][j] << " es: " << jac_s1_s2 << endl;
+
+                    if(jac_s1_s2 > max_jac) {
+                        mes_similars.first = buckets[k][i];
+                        mes_similars.second = buckets[k][j];
+                        max_jac = jac_s1_s2;
+                    }
+
+                }
+            }
+            cout << endl << endl << endl;
+        }
+    }
+
+    cout << "Els dos fitxers amb major similaritat son " << mes_similars.first << " i " << mes_similars.second << ", el seu jacard es: " << max_jac << endl;
+}
+
 // Case 1 in Switch
 // We only compare 2 documents given their paths
 void compare_n_docs() {
@@ -362,6 +436,8 @@ void compare_n_docs() {
 		compute_band_lsh(b, tam, s, num_r, buckets, treshold);
     }
     imprimirBuckets(buckets);
+
+    minim_jacard(buckets);
 
 
 /*
