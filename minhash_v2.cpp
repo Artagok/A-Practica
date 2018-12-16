@@ -272,27 +272,5 @@ int main() {
     m.clear();
     cout << "Enter the desired value for k (the length of the shingles [k > 0])" << endl;
     cin >> k;
-
-    int mode;
-    cout << "Select the comparation mode to obtain Jaccard Similarity:" << endl;
-    cout << "\t1 -> Compare 2 documents given their paths in the file system." << endl;
-    cout << "\t2 -> Compare ALL files in a directory among them given a path to the said directory." << endl;
-
-    while (cin >> mode and (mode != 1 and mode != 2)) {
-        cout << "Choose the desired mode [1/2]" << endl;
-    }
-
-    switch(mode) {
-        case 1:
-            compare_2_docs();
-            break;
-
-        case 2:
-            //compare_whole_directory();
-            break;
-
-        default:
-            cout << "ERROR: Not a valid mode [1/2]" << endl;
-            break;
-    }
+    compare_2_docs();
 }
