@@ -20,6 +20,7 @@ int k;                              //
 // Key  = id_document               //
 // Info = set of unique k-shingles  //
 map < string, set<string> > m;      //
+map < pair<int,int>, double > m_jac;//
 /************************************/
 
 
@@ -352,10 +353,15 @@ double obtain_Jsim_AB(set<string> s1_set, set<string> s2_set) {
 
 }
 
-set<string> obtenir_set(int n){
+set<string> obtenir_set(string &path, int n){
     map<string,set<string> >:: iterator it = m.begin();
     for(int i = 0; i < n; ++i){
         ++it;
+    }
+    path = it -> first;
+    size_t pos_barra = path.rfind("/");
+    if(pos_barra != string::npos){
+        path = path.substr(pos_barra+1, path.size());
     }
     return it -> second;
 }
@@ -363,33 +369,43 @@ set<string> obtenir_set(int n){
 void minim_jacard(vector<vector<int> > buckets) {
     double max_jac, jac_s1_s2;
     max_jac = 0;
-    pair<int,int> mes_similars;
+    pair<string,string> mes_similars;
 
     for(int k = 0; k < buckets.size(); ++k){
 
         if(buckets[k].size() != 0){
-            cout << "Aquests son els Jacards de cada parell de fitxers del bucket: " << k <<  endl;
+            cout << "These are the Jaccard Similarities for the bucket " << k << ":" << endl;
             for(int i = 0; i < buckets[k].size()-1;++i) {
                 for(int j = i+1; j < buckets[k].size(); ++j){
-                    set<string> s1 = obtenir_set(buckets[k][i]);
-                    set<string> s2 = obtenir_set(buckets[k][j]);
-                    jac_s1_s2 = obtain_Jsim_AB(s1,s2);
 
-                    cout << "El jacard entre els fitxers identificats per " << buckets[k][i] << " i " << buckets[k][j] << " es: " << jac_s1_s2 << endl;
+                    if(m_jac.find( make_pair(buckets[k][i],buckets[k][j]) ) == m_jac.end() ) {
+                    
+                        string A, B;
+                        set<string> s1 = obtenir_set(A,buckets[k][i]);
+                        set<string> s2 = obtenir_set(B,buckets[k][j]);
+                        jac_s1_s2 = obtain_Jsim_AB(s1,s2);
 
-                    if(jac_s1_s2 > max_jac) {
-                        mes_similars.first = buckets[k][i];
-                        mes_similars.second = buckets[k][j];
-                        max_jac = jac_s1_s2;
+
+                        cout << "Jsim(" << A <<"," << B << ") = " << jac_s1_s2 << endl << endl;
+
+
+                        m_jac[make_pair(buckets[k][i],buckets[k][j])] = jac_s1_s2;
+
+                        if(jac_s1_s2 > max_jac) {
+                            mes_similars.first = A;
+                            mes_similars.second = B;
+                            max_jac = jac_s1_s2;
+
+                        }
                     }
 
                 }
             }
-            cout << endl << endl << endl;
+            cout  << endl;
         }
     }
 
-    cout << "Els dos fitxers amb major similaritat son " << mes_similars.first << " i " << mes_similars.second << ", el seu jacard es: " << max_jac << endl;
+    cout << "The pair of documents " << mes_similars.first << " and " << mes_similars.second << ", are the most similar of all. Jsim = " << max_jac << endl;
 }
 
 // Case 1 in Switch
@@ -466,6 +482,7 @@ int main() {
     srand (time(NULL)); //set seed
 
     m.clear();
+    m_jac.clear();
     cout << "Enter the desired value for k (the length of the shingles [k > 0])" << endl;
     cin >> k;
     string path_dir;
