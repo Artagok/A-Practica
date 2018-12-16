@@ -230,13 +230,13 @@ double compute_min_hash(int tam, const vector<pair<int,int> >& h,const vector<in
 	for (int i = 0; i < h.size(); i++){
 		int sig1 = -1;
 		for (int j = 0; j < s1.size(); j++){
-			int res = (h[i].first * s1[j] + h[i].second) % (s1.size()+s2.size());
+			int res = (h[i].first * s1[j] + h[i].second) % (tam);
 			if (sig1 == -1) sig1 = res;
 			else if(res < sig1) sig1 = res;
 		}
 		int sig2 = -1;
 		for (int j = 0; j < s2.size(); j++){
-			int res = (h[i].first * s2[j] + h[i].second) % (s1.size()+s2.size());
+			int res = (h[i].first * s2[j] + h[i].second) % (tam);
 			if (sig2 == -1) sig2 = res;
 			else if(res < sig2) sig2 = res;
 		}
