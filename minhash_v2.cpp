@@ -169,7 +169,7 @@ double compute_min_hash(int tam, int num_hashs, int num_docu, vector<int> s1, ve
     			else if(res < sig2) sig2 = res;
     		}
     		if (sig1 == sig2) eq++;
-            cout << sig1 << "  " << sig2 << endl;
+            //cout << sig1 << "  " << sig2 << endl;
     	}
 
     return ((double) eq / (double) h.size());
