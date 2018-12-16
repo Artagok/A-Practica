@@ -241,7 +241,7 @@ double compute_min_hash(int tam, const vector<pair<int,int> >& h,const vector<in
 			else if(res < sig2) sig2 = res;
 		}
 		if (sig1 == sig2) eq++;
-        cout << sig1 << "  " << sig2 << endl;
+        //cout << sig1 << "  " << sig2 << endl;
 	}
 
 	return ((double) eq / (double) h.size());
@@ -252,7 +252,7 @@ double compute_min_hash(int tam, const vector<pair<int,int> >& h,const vector<in
 void compute_band_lsh(int ith_band, int tam, const vector<vector<int> >& S, int r, vector<vector<int> >& buckets, double treshold){
 
 	vector<int> ids (S.size(),-1);
-	
+
 	vector<pair<int,int> > h;
 	int m,n;
 	for (int i = 0; i < r; i++){
@@ -269,26 +269,32 @@ void compute_band_lsh(int ith_band, int tam, const vector<vector<int> >& S, int 
 		{
 			for (int j = i + 1; j < S.size(); j++)
 			{
-				
+
 				if (ids[i] == -1 and ids[j] == -1){
 					similarity = compute_min_hash(tam,h,S[i],S[j]);
 					if (similarity > treshold){
-						buckets.push_back();
-						buckets[buckets.size()-1].push_back(i);	
-						buckets[buckets.size()-1].push_back(j);	
+                        vector<int> v_aux;
+                        v_aux.push_back(i);
+                        v_aux.push_back(j);
+						buckets.push_back(v_aux);
+                        ids[i] = buckets.size()-1;
+                        ids[j] = buckets.size()-1;
+
 					}
 				}
-				
-				if (ids[i] != -1 and ids[j] == -1){
+
+				else if (ids[i] != -1 and ids[j] == -1){
 					similarity = compute_min_hash(tam,h,S[i],S[j]);
 					if (similarity > treshold){
 						buckets[ids[i]].push_back(j);
+                        ids[j] = ids[i];
 					}
 				}
-				if (ids[i] == -1 and ids[j] != -1){
+				else if (ids[i] == -1 and ids[j] != -1){
 					similarity = compute_min_hash(tam,h,S[i],S[j]);
 					if (similarity > treshold){
 						buckets[ids[j]].push_back(i);
+                        ids[i] = ids[j];
 					}
 				}
 			}
