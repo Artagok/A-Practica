@@ -430,7 +430,7 @@ void compare_n_docs() {
     cout << "Establish the threshold t meaning that if two documents have a simulated Jsim less than t they will not be considered as candidates: ";
     cin >> treshold;
 
-    vector<vector<int> > buckets (num_b);
+    vector<vector<int> > buckets;
     for (int b = 0; b < num_b; b++){
 		compute_band_lsh(b, tam, s, num_r, buckets, treshold);
     }
