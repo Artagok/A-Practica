@@ -374,12 +374,12 @@ void minim_jacard(vector<vector<int> > buckets) {
     for(int k = 0; k < buckets.size(); ++k){
 
         if(buckets[k].size() != 0){
-            cout << "These are the Jaccard Similarities for the bucket " << k << ":" << endl;
+            cout << "These are the (not repeated in a previous bucket) Jaccard Similarities for the bucket " << k << ":" << endl;
             for(int i = 0; i < buckets[k].size()-1;++i) {
                 for(int j = i+1; j < buckets[k].size(); ++j){
 
                     if(m_jac.find( make_pair(buckets[k][i],buckets[k][j]) ) == m_jac.end() ) {
-                    
+
                         string A, B;
                         set<string> s1 = obtenir_set(A,buckets[k][i]);
                         set<string> s2 = obtenir_set(B,buckets[k][j]);
