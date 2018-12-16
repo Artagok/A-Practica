@@ -28,7 +28,7 @@ void clean_input_folder() {
     // Uncomment to print all entries in kshingles_input directory before removal
     //for (int i = 0; i < v_files.size(); ++i)
         //cout << v_files[i] << endl;
-    
+
     string dir = "kshingles_input/";
     for (int i = 0; i < v_files.size(); ++i) {
         if (v_files[i] != "1.in" and v_files[i] != "." and v_files[i] != "..")
@@ -49,7 +49,7 @@ void get_words_in_1(vector<string>& words) {
 
     buffer << ifs.rdbuf();
     string content = buffer.str();
-    
+
     string delim = " ";
     size_t pos = 0;
     string token;
@@ -69,14 +69,14 @@ string generate_permutation(const vector<string>& original) {
     for (int i = 0; i < copia.size(); ++i) {
         if (i == 0)
             res += copia[i];
-        else 
+        else
             res = res + " " + copia[i];
     }
     return res;
 }
 
 void generate_n_random_permutations(const vector<string>& original, const int& n) {
-    
+
     std::ofstream ofs;
     for (int i = 2; i <= n; ++i) {
         string new_file = "kshingles_input/" + to_string(i) + ".in";
@@ -88,15 +88,15 @@ void generate_n_random_permutations(const vector<string>& original, const int& n
 }
 
 int main() {
-    
+
     clean_input_folder();
     vector<string> words;
     get_words_in_1(words);
-    
+
     /* Uncomment to print all words from kshingles_input/1.in one by one
     for (int i = 0; i < words.size(); ++i)
         cout << words[i] << endl; */
-    
+
     cout << "kshingles_input/1.in contains 50 words of Lorem Ipsum and from these words you can generate " <<
             "n files each containing a random permutation of the contents in 1.in" << endl;
     cout << "[1 <= n <= 100]" << endl;
