@@ -435,6 +435,7 @@ void compare_n_docs() {
 		compute_band_lsh(b, tam, s, num_r, buckets, treshold);
     }
     imprimirBuckets(buckets);
+    cout << "Note: Given an index i in the Buckets output it doesn't necessarily mean it is i.in document" << endl << endl;
 
     minim_jacard(buckets);
 
